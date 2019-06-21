@@ -1,0 +1,502 @@
+#include "pch.h"
+#include <iostream>
+#include <ctime>
+#include <Windows.h>
+
+using namespace std;
+
+class Grid {
+public: 
+	int rows = 10;
+	int columns = 10;
+	int kriptys = 10;
+
+};
+
+const int rows = 10;
+const int columns = 10;
+const int kriptys = 10;
+
+int maxships = 5;
+int masyvas[rows][columns];
+int zaidejomasyvas[rows][columns];
+
+void KompoMasyvas()
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			masyvas[i][j] = 0;
+		}
+	}
+}
+
+void ZaidejoMasyvas()
+{
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			zaidejomasyvas[i][j] = 9;
+		}
+	}
+}
+
+void ShowZaidejoMasyva()
+{
+	cout << "   ";
+	for (int i = 0; i < rows; i++) {
+		cout << "|" << i;
+	}
+	cout << "|";
+	cout << endl;
+	cout << "   =====================";
+	cout << endl;
+	for (int i = 0; i < rows; i++)
+	{
+		cout << i << "| |";
+		for (int j = 0; j < columns; j++)
+		{
+			if (zaidejomasyvas[i][j] == 9) //9 - tuscias
+				cout << "." << "|";
+			if (zaidejomasyvas[i][j] == 8) //8 - uzpildytas
+				cout << "#" << "|";
+			if (zaidejomasyvas[i][j] == 7) // 7 - pataikytas
+				cout << "X" << "|";
+			if (zaidejomasyvas[i][j] == 6) // 6 - nepataikytas
+				cout << "o" << "|";
+		}
+		cout << endl;
+	}
+}
+
+void ShowKompoMasyva()
+{
+	cout << "   ";
+	for (int i = 0; i < rows; i++) {
+		cout << "|" << i;
+	}
+	cout << "|";
+	cout << endl;
+	cout << "   =====================";
+	cout << endl;
+	for (int i = 0; i < rows; i++)
+	{
+		cout << i << "| |";
+		for (int j = 0; j < columns; j++)
+		{
+			if (masyvas[i][j] == 0 || masyvas[i][j] == 1)
+				cout << "." << "|";
+			if (masyvas[i][j] == 2)
+				cout << "X" << "|";
+			if (masyvas[i][j] == 3)
+				cout << "o" << "|";
+		}
+		cout << endl;
+	}
+}
+//Kompiuterio random setted ships
+void SetShipsPenkiavietis()
+{
+	int s = 0;
+	while (s < 1) // tokio tipo laivu skaicius
+	{
+		int k = rand() % kriptys; //sprendzia ar vertikaliai ar horizontaliai
+		int x = rand() % rows;
+		int y = rand() % columns;
+		if (k > 5 && x > 5 && masyvas[x][y] == 0 && masyvas[x - 1][y] == 0 && masyvas[x - 2][y] == 0 && masyvas[x - 3][y] == 0 && masyvas[x - 4][y] == 0 && masyvas[x][y] != 1 && masyvas[x - 1][y] != 1 && masyvas[x - 2][y] != 1 && masyvas[x - 3][y] != 1 && masyvas[x - 4][y] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x - 1][y] = 1;
+			masyvas[x - 2][y] = 1;
+			masyvas[x - 3][y] = 1;
+			masyvas[x - 4][y] = 1;
+		}
+		if (k <= 5 && y < 5 && masyvas[x][y] == 0 && masyvas[x][y + 1] == 0 && masyvas[x][y + 2] == 0 && masyvas[x][y + 3] == 0 && masyvas[x][y + 4] == 0 && masyvas[x][y] != 1 && masyvas[x][y + 1] != 1 && masyvas[x][y + 2] != 1 && masyvas[x][y + 3] != 1 && masyvas[x][y + 4] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x][y + 1] = 1;
+			masyvas[x][y + 2] = 1;
+			masyvas[x][y + 3] = 1;
+			masyvas[x][y + 4] = 1;
+		}
+	}
+}
+
+void SetShipsKeturvietis()
+{
+	int s = 0;
+	while (s < 1) // tokio tipo laivu skaicius
+	{
+		int k = rand() % kriptys; //sprendzia ar vertikaliai ar horizontaliai
+		int x = rand() % rows;
+		int y = rand() % columns;
+		if (k > 5 && x > 4 && masyvas[x][y] == 0 && masyvas[x - 1][y] == 0 && masyvas[x - 2][y] == 0 && masyvas[x - 3][y] == 0 && masyvas[x][y] != 1 && masyvas[x - 1][y] != 1 && masyvas[x - 2][y] != 1 && masyvas[x - 3][y] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x - 1][y] = 1;
+			masyvas[x - 2][y] = 1;
+			masyvas[x - 3][y] = 1;
+		}
+		if (k <= 5 && y < 4 && masyvas[x][y] == 0 && masyvas[x][y + 1] == 0 && masyvas[x][y + 2] == 0 && masyvas[x][y + 3] == 0 && masyvas[x][y] != 1 && masyvas[x][y + 1] != 1 && masyvas[x][y + 2] != 1 && masyvas[x][y + 3] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x][y + 1] = 1;
+			masyvas[x][y + 2] = 1;
+			masyvas[x][y + 3] = 1;
+		}
+	}
+}
+
+void SetShipsTrivietis()
+{
+	int s = 0;
+	while (s < 1) // tokio tipo laivu skaicius
+	{
+		int k = rand() % kriptys; //sprendzia ar vertikaliai ar horizontaliai
+		int x = rand() % rows;
+		int y = rand() % columns;
+		if (k > 5 && x > 3 && masyvas[x][y] == 0 && masyvas[x - 1][y] == 0 && masyvas[x - 2][y] == 0 && masyvas[x][y] != 1 && masyvas[x - 1][y] != 1 && masyvas[x - 2][y] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x - 1][y] = 1;
+			masyvas[x - 2][y] = 1;
+		}
+		if (k <= 5 && y < 3 && masyvas[x][y] == 0 && masyvas[x][y + 1] == 0 && masyvas[x][y + 2] == 0 && masyvas[x][y] != 1 && masyvas[x][y + 1] != 1 && masyvas[x][y + 2] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x][y + 1] = 1;
+			masyvas[x][y + 2] = 1;
+		}
+	}
+}
+
+void SetShipsDvivietis()
+{
+	int s = 0;
+	while (s < 2) // tokio tipo laivu skaicius
+	{
+		int k = rand() % kriptys; //sprendzia ar vertikaliai ar horizontaliai
+		int x = rand() % rows;
+		int y = rand() % columns;
+		if (k > 5 && x > 2 && masyvas[x][y] == 0 && masyvas[x - 1][y] == 0 && masyvas[x][y] != 1 && masyvas[x - 1][y] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x - 1][y] = 1;
+		}
+		if (k <= 5 && y < 2 && masyvas[x][y] == 0 && masyvas[x][y + 1] == 0 && masyvas[x][y] != 1 && masyvas[x][y + 1] != 1)
+		{
+			s++;
+			masyvas[x][y] = 1;
+			masyvas[x][y + 1] = 1;
+		}
+	}
+}
+//
+bool PcAttack(int x, int y)
+{
+	if (zaidejomasyvas[x][y] == 8)
+	{
+		zaidejomasyvas[x][y] = 7;
+		return true;
+	}
+	else zaidejomasyvas[x][y] = 6;
+	return false;
+}
+
+bool Attack(int x, int y)
+{
+	if (masyvas[x][y] == 1)
+	{
+		masyvas[x][y] = 2;
+		return true;
+	}
+	else masyvas[x][y] = 3;
+	return false;
+}
+
+int NumberOfComputerShips()
+{
+	int c = 0;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			if (masyvas[i][j] == 1)
+				c++;
+		}
+	}
+	return c;
+}
+
+int NumberOfPlayerShips()
+{
+	int d = 0;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			if (zaidejomasyvas[i][j] == 8)
+				d++;
+		}
+	}
+	return d;
+}
+
+void eikstesKurimas()
+{
+	int laivukiekis = 0;
+	int pos3, pos4;
+	int x, y;
+	int kriptis;
+	while (laivukiekis < 5)
+	{
+		if (laivukiekis == 0) {
+			cout << "Pasirinkite 5-viecio laivo snapo koordinates: ";
+			cin >> pos3 >> pos4;
+			int x = pos3;
+			int y = pos4;
+			if (zaidejomasyvas[pos3][pos4] != 8 && pos3 < 6 && pos4 < 6)
+			{
+				cout << "Vertikaliai (1) ar horizontaliai (2)? : ";
+				cin >> kriptis;
+				if (kriptis == 2 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3][pos4 - 1] != 8 && zaidejomasyvas[pos3][pos4 - 2] != 8 && zaidejomasyvas[pos3][pos4 - 3] != 8 && zaidejomasyvas[pos3][pos4 - 4] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x][y + 1] = 8;
+					zaidejomasyvas[x][y + 2] = 8;
+					zaidejomasyvas[x][y + 3] = 8;
+					zaidejomasyvas[x][y + 4] = 8;
+					laivukiekis++;
+				}
+				if (kriptis == 1 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3 + 1][pos4] != 8 && zaidejomasyvas[pos3 + 2][pos4] != 8 && zaidejomasyvas[pos3 + 3][pos4] != 8 && zaidejomasyvas[pos3 + 3][pos4] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x + 1][y] = 8;
+					zaidejomasyvas[x + 2][y] = 8;
+					zaidejomasyvas[x + 3][y] = 8;
+					zaidejomasyvas[x + 4][y] = 8;
+					laivukiekis++;
+				}
+			}
+			else
+			{
+				cout << "Pasirinkimas negalimas.";
+				Sleep(1500);
+			}
+
+			system("cls");
+			ShowZaidejoMasyva();
+		}
+		if (laivukiekis == 1) {
+			cout << "Pasirinkite 4-viecio laivo snapo koordinates: ";
+			cin >> pos3 >> pos4;
+
+			x = pos3;
+			y = pos4;
+			if (zaidejomasyvas[pos3][pos4] != 8 && pos3 < 7 && pos4 < 7)
+			{
+				cout << "Vertikaliai (1) ar horizontaliai (2)? : ";
+				cin >> kriptis;
+				if (kriptis == 2 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3][pos4 - 1] != 8 && zaidejomasyvas[pos3][pos4 - 2] != 8 && zaidejomasyvas[pos3][pos4 - 3] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x][y + 1] = 8;
+					zaidejomasyvas[x][y + 2] = 8;
+					zaidejomasyvas[x][y + 3] = 8;
+					laivukiekis++;
+				}
+				if (kriptis == 1 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3 + 1][pos4] != 8 && zaidejomasyvas[pos3 + 2][pos4] != 8 && zaidejomasyvas[pos3 + 3][pos4] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x + 1][y] = 8;
+					zaidejomasyvas[x + 2][y] = 8;
+					zaidejomasyvas[x + 3][y] = 8;
+					laivukiekis++;
+				}
+			}
+			else
+			{
+				cout << "Pasirinkimas negalimas.";
+				Sleep(1500);
+			}
+
+			system("cls");
+			ShowZaidejoMasyva();
+		}
+		if (laivukiekis == 2) {
+			cout << "Pasirinkite 3-viecio laivo snapo koordinates: ";
+			cin >> pos3 >> pos4;
+			x = pos3;
+			y = pos4;
+			if (zaidejomasyvas[pos3][pos4] != 8 && pos3 < 8 && pos4 < 8)
+			{
+				cout << "Vertikaliai (1) ar horizontaliai (2)? : ";
+				cin >> kriptis;
+				if (kriptis == 2 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3][pos4 - 1] != 8 && zaidejomasyvas[pos3][pos4 - 2] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x][y + 1] = 8;
+					zaidejomasyvas[x][y + 2] = 8;
+					laivukiekis++;
+				}
+				if (kriptis == 1 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3 + 1][pos4] != 8 && zaidejomasyvas[pos3 + 2][pos4] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x + 1][y] = 8;
+					zaidejomasyvas[x + 2][y] = 8;
+					laivukiekis++;
+				}
+			}
+			else
+			{
+				cout << "Pasirinkimas negalimas.";
+				Sleep(1500);
+			}
+
+			system("cls");
+			ShowZaidejoMasyva();
+		}
+		if (laivukiekis == 3) {
+			cout << "Pasirinkite 2-viecio laivo snapo koordinates: ";
+			cin >> pos3 >> pos4;
+			x = pos3;
+			y = pos4;
+			if (zaidejomasyvas[pos3][pos4] != 8 && pos3 < 9 && pos4 < 9)
+			{
+				cout << "Vertikaliai (1) ar horizontaliai (2)? : ";
+				cin >> kriptis;
+				if (kriptis == 2 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3][pos4 - 1] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x][y + 1] = 8;
+					laivukiekis++;
+				}
+				if (kriptis == 1 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3 + 1][pos4] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x + 1][y] = 8;
+					laivukiekis++;
+				}
+			}
+			else
+			{
+				cout << "Pasirinkimas negalimas.";
+				Sleep(1500);
+			}
+
+			system("cls");
+			ShowZaidejoMasyva();
+		}
+		if (laivukiekis == 4) {
+			cout << "Pasirinkite Antro 2-viecio laivo snapo koordinates: ";
+			cin >> pos3 >> pos4;
+			x = pos3;
+			y = pos4;
+			if (zaidejomasyvas[pos3][pos4] != 8 && pos3 < 9 && pos4 < 9)
+			{
+				cout << "Vertikaliai (1) ar horizontaliai (2)? : ";
+				cin >> kriptis;
+				if (kriptis == 2 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3][pos4 - 1] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x][y + 1] = 8;
+					laivukiekis++;
+				}
+				if (kriptis == 1 && zaidejomasyvas[pos3][pos4] != 8 && zaidejomasyvas[pos3 + 1][pos4] != 8)
+				{
+					zaidejomasyvas[x][y] = 8;
+					zaidejomasyvas[x + 1][y] = 8;
+					laivukiekis++;
+				}
+			}
+			else
+			{
+				cout << "Pasirinkimas negalimas.";
+				Sleep(1500);
+			}
+
+			system("cls");
+			ShowZaidejoMasyva();
+		}
+	}
+}
+
+
+int main()
+{
+	srand(time(NULL));
+
+	ZaidejoMasyvas();
+	ShowZaidejoMasyva();
+	eikstesKurimas();
+	system("cls");
+
+	KompoMasyvas();
+	SetShipsPenkiavietis();
+	SetShipsKeturvietis();
+	SetShipsTrivietis();
+	SetShipsDvivietis();
+	int pos1, pos2;
+	int pcpos1, pcpos2;
+
+	cout << "-----------------------" << endl;
+	cout << "Laukiama ivesties." << endl;
+	cout << "-----------------------" << endl;
+	while (NumberOfComputerShips() > 0 && NumberOfPlayerShips() > 0)
+	{
+		cout << "Likusiu taikiniu skaicius: " << NumberOfComputerShips() << " || Tavo laivu skaicius: " << NumberOfPlayerShips() << endl;
+		cout << "-----------------------" << endl;
+		ShowZaidejoMasyva();
+		cout << "-----------------------" << endl;
+		ShowKompoMasyva();
+		cout << "Iveskite suvio koordinates: "; cin >> pos1 >> pos2;
+
+		/*cout << "Legenda:" << endl;
+		cout << " [.] - nezinoma vieta." << endl;
+		cout << " [X] - Sovei ir pataikei." << endl;
+		cout << " [o] - Sovei ir nepataikei." << endl;
+		*/
+
+		if (Attack(pos1, pos2))
+			cout << "Pataikei" << endl;
+		else
+			cout << "Nepataikei" << endl;
+		Sleep(100);
+		cout << "Kompiuterio eile." << endl;
+		pcpos1 = rand() % rows;
+		pcpos2 = rand() % columns;
+		if (PcAttack(pcpos1, pcpos2))
+			cout << "Kompas pataike. " << endl;
+		else
+			cout << "Kompas nepataike." << endl;
+		Sleep(1000);
+		system("cls");
+	}
+	cout << "Game over!" << endl;
+	if (NumberOfPlayerShips() > 0)
+	{
+		cout << "-----------------------" << endl;
+		cout << "        Laimejai       " << endl;
+		cout << "-----------------------" << endl;
+	}
+	else
+	{
+		cout << "-----------------------" << endl;
+		cout << "      Pralaimejai      " << endl;
+		cout << "-----------------------" << endl;
+	}
+	ShowZaidejoMasyva();
+	ShowKompoMasyva();
+
+	system("pause");
+	return 0;
+}
